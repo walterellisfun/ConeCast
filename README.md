@@ -1,5 +1,5 @@
-# ConeCast
-A ConeCast class for Unity3d that can easily be made an extension method for the Physics class.
+# ConeCastAll extension method
+A Unity3d ConeCastAll extension method for the Physics class.
 
 Use this to find colliders within a cone-shaped volume.
 
