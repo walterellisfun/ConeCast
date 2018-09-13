@@ -1,16 +1,14 @@
 ﻿using UnityEngine;
 
-public class ConeTestRun : MonoBehaviour {
+public class ConeCastExample : MonoBehaviour {
 
     public float radius;
     public float depth;
     public float angle;
 
-    TestCone testCone;
-
 	void FixedUpdate () {
 
-        RaycastHit[] coneHits = TestCone.ConeCastAll(transform.position, radius, transform.forward, depth, angle);
+        RaycastHit[] coneHits = ConeCast.ConeCastAll(transform.position, radius, transform.forward, depth, angle);
 
         if (coneHits.Length > 0)
         {
