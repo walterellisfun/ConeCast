@@ -6,9 +6,11 @@ public class ConeCastExample : MonoBehaviour {
     public float depth;
     public float angle;
 
-	void FixedUpdate () {
+    private Physics physics;
 
-        RaycastHit[] coneHits = ConeCast.ConeCastAll(transform.position, radius, transform.forward, depth, angle);
+	void FixedUpdate () {
+        
+        RaycastHit[] coneHits = physics.ConeCastAll(transform.position, radius, transform.forward, depth, angle);
 
         if (coneHits.Length > 0)
         {
