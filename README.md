@@ -1,6 +1,8 @@
 # ConeCast
 A ConeCast class for Unity3d that can easily be made an extension method for the Physics class.
 
+Use this to find colliders within a cone-shaped volume.
+
 It uses SphereCastAll, which is like a RayCast tube, but then it uses Vector3.Angle to filter out hitpoints according to a cone.
 
 Using it is very similar to using SphereCastAll.
