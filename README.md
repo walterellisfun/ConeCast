@@ -1,3 +1,4 @@
+![ConeCast](https://github.com/walterellisfun/ConeCast/blob/master/ConeCast.gif)
 # ConeCastAll extension method
 A Unity3d ConeCastAll extension method for the Physics class.
 
