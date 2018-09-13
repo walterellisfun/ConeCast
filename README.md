@@ -6,8 +6,8 @@ It uses SphereCastAll, which is like a RayCast tube, but then it uses Vector3.An
 Using it is very similar to using SphereCastAll.
 
 Variables:
-  Vector3 origin
-  float maxRadius
-  Vector3 direction
-  float maxDistance
+  Vector3 origin,
+  float maxRadius,
+  Vector3 direction,
+  float maxDistance,
   float coneAngle
