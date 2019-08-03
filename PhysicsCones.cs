@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class PhysicsCones
@@ -17,10 +18,10 @@ public static class PhysicsCones
     /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
     /// <returns></returns>
     public static RaycastHit ConeCast(Vector2 origin, Vector2 direction, float coneAngle, float maxDistance, 
-                                        int mask = Physics.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
+                                        int mask = Physics.DefaultRaycastLayers, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        float maxRadius = Mathf.Tan(coneAngle) * maxDistance;
-        return ConeCast(physics, origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
+        float maxRadius = Mathf.Abs(Mathf.Tan(coneAngle * Mathf.Deg2Rad) * maxDistance);
+        return ConeCast(origin, maxRadius, direction, maxDistance, mask, queryTriggerInteraction);
     }
 
     /// <summary>
@@ -37,15 +38,15 @@ public static class PhysicsCones
     /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
     /// <returns></returns>
     public static RaycastHit ConeCast(Vector2 origin, float maxRadius, Vector2 direction, float maxDistance, 
-                                        int mask = Physics.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
+                                        int mask = Physics.DefaultRaycastLayers, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         // if maxDistance is infinite then we can't figure out a max radius size. 
         // I don't think that Physics.SphereCast would be happy with an infinite radius.
         if (float.IsInfinity(maxDistance)) throw new ArgumentException("Must be finite");
-        float coneAngle = Mathf.Atan(maxRadius / maxDistance);
+        float coneAngle = Mathf.Atan(maxRadius / maxDistance) * Mathf.Rad2Deg;
 
         // get everything inside our cone plus some and then pair the list down to the actual matches
-        RaycastHit[] results = Physics.SphereCastAll(origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
+        RaycastHit[] results = Physics.SphereCastAll(origin, maxRadius, direction, maxDistance, mask, queryTriggerInteraction);
         var numResults = ConsolidateConeMatches(results, results.Length, origin, direction, coneAngle);
 
         if (numResults > 0)
@@ -72,10 +73,10 @@ public static class PhysicsCones
     /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
     /// <returns></returns>
     public static RaycastHit[] ConeCastAll(Vector2 origin, Vector2 direction, float coneAngle, float maxDistance,
-                                            int mask = Physics.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
+                                            int mask = Physics.DefaultRaycastLayers, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        float maxRadius = Mathf.Tan(coneAngle) * maxDistance;
-        return ConeCastAll(physics, origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
+        float maxRadius = Mathf.Abs(Mathf.Tan(coneAngle * Mathf.Deg2Rad) * maxDistance);
+        return ConeCastAll(origin, maxRadius, direction, maxDistance, mask, queryTriggerInteraction);
     }
 
     /// <summary>
@@ -92,15 +93,15 @@ public static class PhysicsCones
     /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
     /// <returns></returns>
     public static RaycastHit[] ConeCastAll(Vector2 origin, float maxRadius, Vector2 direction, float maxDistance,
-                                             int mask = Physics.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
+                                             int mask = Physics.DefaultRaycastLayers, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         // if maxDistance is infinite then we can't figure out a max radius size. 
         // I don't think that Physics.SphereCast would be happy with an infinite radius.
         if (float.IsInfinity(maxDistance)) throw new ArgumentException("Must be finite");
-        float coneAngle = Mathf.Atan(maxRadius / maxDistance);
+        float coneAngle = Mathf.Atan(maxRadius / maxDistance) * Mathf.Rad2Deg;
 
         // get everything inside our cone plus some and then pair the list down to the actual matches
-        RaycastHit[] results = Physics.SphereCastAll(origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
+        RaycastHit[] results = Physics.SphereCastAll(origin, maxRadius, direction, maxDistance, mask, queryTriggerInteraction);
         var numResults = ConsolidateConeMatches(results, results.Length, origin, direction, coneAngle);
 
         // Resize the array to match our new results set
@@ -123,10 +124,10 @@ public static class PhysicsCones
     /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
     /// <returns></returns>
     public static int ConeCastNonAlloc(Vector2 origin, Vector2 direction, float coneAngle, RaycastHit[] results, float maxDistance,
-                                       int mask = Physics.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity) 
+                                       int mask = Physics.DefaultRaycastLayers, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        float maxRadius = Mathf.Tan(coneAngle) * maxDistance;
-        return ConeCastNonAlloc(physics, origin, maxRadius, direction, results, maxDistance, mask, minDepth, maxDepth);
+        float maxRadius = Mathf.Abs(Mathf.Tan(coneAngle * Mathf.Deg2Rad) * maxDistance);
+        return ConeCastNonAlloc(origin, maxRadius, direction, results, maxDistance, mask, queryTriggerInteraction);
     }
 
     /// <summary>
@@ -144,15 +145,15 @@ public static class PhysicsCones
     /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
     /// <returns></returns>
     public static int ConeCastNonAlloc(Vector2 origin, float maxRadius, Vector2 direction, RaycastHit[] results, float maxDistance,
-                                       int mask = Physics.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
+                                       int mask = Physics.DefaultRaycastLayers, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
         // if maxDistance is infinite then we can't figure out a max radius size. 
         // I don't think that Physics.SphereCast would be happy with an infinite radius.
         if (float.IsInfinity(maxDistance)) throw new ArgumentException("Must be finite");
-        float coneAngle = Mathf.Atan(maxRadius / maxDistance);
+        float coneAngle = Mathf.Atan(maxRadius / maxDistance) * Mathf.Rad2Deg;
 
         // get everything inside our cone plus some and then pair the list down to the actual matches
-        int numResults = Physics.SphereCastNonAlloc(origin, maxRadius, direction, results, maxDistance, mask, minDepth, maxDepth);
+        int numResults = Physics.SphereCastNonAlloc(origin, maxRadius, direction, results, maxDistance, mask, queryTriggerInteraction);
         numResults = ConsolidateConeMatches(results, numResults, origin, direction, coneAngle);
 
         return numResults;

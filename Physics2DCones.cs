@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Physics2DCones
@@ -19,8 +20,8 @@ public static class Physics2DCones
     public static RaycastHit2D ConeCast(Vector2 origin, Vector2 direction, float coneAngle, float maxDistance, 
                                         int mask = Physics2D.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
     {
-        float maxRadius = Mathf.Tan(coneAngle) * maxDistance;
-        return ConeCast(physics, origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
+        float maxRadius = Mathf.Abs(Mathf.Tan(coneAngle * Mathf.Deg2Rad) * maxDistance);
+        return ConeCast(origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
     }
 
     /// <summary>
@@ -42,7 +43,7 @@ public static class Physics2DCones
         // if maxDistance is infinite then we can't figure out a max radius size. 
         // I don't think that physics2D.CircleCast would be happy with an infinite radius.
         if (float.IsInfinity(maxDistance)) throw new ArgumentException("Must be finite");
-        float coneAngle = Mathf.Atan(maxRadius / maxDistance);
+        float coneAngle = Mathf.Atan(maxRadius / maxDistance) * Mathf.Rad2Deg;
 
         // get everything inside our cone plus some and then pair the list down to the actual matches
         RaycastHit2D[] results = Physics2D.CircleCastAll(origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
@@ -74,8 +75,8 @@ public static class Physics2DCones
     public static RaycastHit2D[] ConeCastAll(Vector2 origin, Vector2 direction, float coneAngle, float maxDistance,
                                             int mask = Physics2D.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
     {
-        float maxRadius = Mathf.Tan(coneAngle) * maxDistance;
-        return ConeCastAll(physics, origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
+        float maxRadius = Mathf.Abs(Mathf.Tan(coneAngle * Mathf.Deg2Rad) * maxDistance);
+        return ConeCastAll(origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
     }
 
     /// <summary>
@@ -97,7 +98,7 @@ public static class Physics2DCones
         // if maxDistance is infinite then we can't figure out a max radius size. 
         // I don't think that physics2D.CircleCast would be happy with an infinite radius.
         if (float.IsInfinity(maxDistance)) throw new ArgumentException("Must be finite");
-        float coneAngle = Mathf.Atan(maxRadius / maxDistance);
+        float coneAngle = Mathf.Atan(maxRadius / maxDistance) * Mathf.Rad2Deg;
 
         // get everything inside our cone plus some and then pair the list down to the actual matches
         RaycastHit2D[] results = Physics2D.CircleCastAll(origin, maxRadius, direction, maxDistance, mask, minDepth, maxDepth);
@@ -123,10 +124,10 @@ public static class Physics2DCones
     /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
     /// <returns></returns>
     public static int ConeCastNonAlloc(Vector2 origin, Vector2 direction, float coneAngle, RaycastHit2D[] results, float maxDistance,
-                                       int mask = Physics2D.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity) 
+                                       int mask = Physics2D.DefaultRaycastLayers, float minDepth = Mathf.NegativeInfinity, float maxDepth = Mathf.Infinity)
     {
-        float maxRadius = Mathf.Tan(coneAngle) * maxDistance;
-        return ConeCastNonAlloc(physics, origin, maxRadius, direction, results, maxDistance, mask, minDepth, maxDepth);
+        float maxRadius = Mathf.Abs(Mathf.Tan(coneAngle * Mathf.Deg2Rad) * maxDistance);
+        return ConeCastNonAlloc(origin, maxRadius, direction, results, maxDistance, mask, minDepth, maxDepth);
     }
 
     /// <summary>
@@ -149,7 +150,7 @@ public static class Physics2DCones
         // if maxDistance is infinite then we can't figure out a max radius size. 
         // I don't think that physics2D.CircleCast would be happy with an infinite radius.
         if (float.IsInfinity(maxDistance)) throw new ArgumentException("Must be finite");
-        float coneAngle = Mathf.Atan(maxRadius / maxDistance);
+        float coneAngle = Mathf.Atan(maxRadius / maxDistance) * Mathf.Rad2Deg;
 
         // get everything inside our cone plus some and then pair the list down to the actual matches
         int numResults = Physics2D.CircleCastNonAlloc(origin, maxRadius, direction, results, maxDistance, mask, minDepth, maxDepth);
